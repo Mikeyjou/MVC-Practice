@@ -21,7 +21,7 @@ import com.lavidatec.template.vo.TrainsVo;
  *
  * @author Suhmian
  */
-public class JavaTest {
+public class Test {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello! World!");
         IUsersDao iUsersDao = new UsersDaoImpl();
