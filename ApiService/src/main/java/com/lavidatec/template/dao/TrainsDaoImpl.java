@@ -285,6 +285,10 @@ public class TrainsDaoImpl implements ITrainsDao{
                 criList.add("type = :type");
                 paramMap.put("type", trainsVo.getType());
             }
+            if (StringUtils.isNotBlank(trainsVo.getDate())) {
+                criList.add("date = :date");
+                paramMap.put("date", trainsVo.getDate());
+            }
 
             if (!criList.isEmpty()) {
                 // 使用者輸入查詢條件

@@ -28,6 +28,7 @@ public class TrainServiceImpl implements ITrainService{
     static final Logger LOGGER
             = LoggerFactory.getLogger(UserServiceImpl.class);
     
+    private ITrainsDao iTrainsDao = new TrainsDaoImpl();
     @Override
      public final void trainPersist(final Optional<TrainsModel> trains)
             throws Exception {
@@ -62,7 +63,6 @@ public class TrainServiceImpl implements ITrainService{
     public final Optional<List<TrainsModel>> trainFindList(final TrainsVo trainsVo)
             throws Exception {
         LOGGER.info("trainFindListStart");
-        ITrainsDao iTrainsDao = new TrainsDaoImpl();
         Optional<List<TrainsModel>> result = iTrainsDao.trainsFindList(trainsVo);
         LOGGER.info("trainFindListEnd");
         return result;

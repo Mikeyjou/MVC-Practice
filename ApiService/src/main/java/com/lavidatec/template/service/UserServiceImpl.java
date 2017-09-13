@@ -73,8 +73,10 @@ public class UserServiceImpl implements IUserService{
         LOGGER.info("userFindStart");
         UsersVo usersVo = new UsersVo();
         usersVo.setAccount(users.get().getAccount());
-        if(users.get().getPassword().isEmpty())
+        if(StringUtils.isNotBlank(users.get().getPassword()))
             usersVo.setPassword(sha.createHash(users.get().getPassword()));
+        if(StringUtils.isNotBlank(users.get().getIdentifier()))
+            usersVo.setIdentifier(users.get().getIdentifier());
         Optional<UsersModel> result = iUsersDao.usersFind(usersVo);
         LOGGER.info("userFindEnd");
         return result;
