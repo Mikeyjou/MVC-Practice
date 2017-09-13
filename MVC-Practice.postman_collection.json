@@ -1,0 +1,333 @@
+{
+	"variables": [],
+	"info": {
+		"name": "MVC-Practice",
+		"_postman_id": "1c02ce7d-13c9-0758-48ee-5518dd8655f7",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User add",
+			"request": {
+				"url": "{{HOST}}WebApi/User",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "account",
+							"value": "mikey",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "User login",
+			"request": {
+				"url": "{{HOST}}WebApi/User/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "account",
+							"value": "mikey",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "User logout",
+			"request": {
+				"url": {
+					"raw": "{{HOST}}WebApi/User/logout",
+					"host": [
+						"{{HOST}}WebApi"
+					],
+					"path": [
+						"User",
+						"logout"
+					],
+					"query": [
+						{
+							"key": "account",
+							"value": "test",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "account",
+							"value": "mikey",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "User delete",
+			"request": {
+				"url": "{{HOST}}WebApi/User",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "account",
+							"value": "test",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Train search",
+			"request": {
+				"url": {
+					"raw": "{{HOST}}WebApi/Train/search?date=2017/09/12&type=莒光",
+					"host": [
+						"{{HOST}}WebApi"
+					],
+					"path": [
+						"Train",
+						"search"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2017/09/12",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "type",
+							"value": "莒光",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Train add",
+			"request": {
+				"url": "{{HOST}}WebApi/Train",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "no",
+							"value": "112",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "區間特快",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "ticketsLimit",
+							"value": "15",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "date",
+							"value": "20170915",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "訂票",
+			"request": {
+				"url": "{{HOST}}WebApi/User/order",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "account",
+							"value": "mikey",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "identifier",
+							"value": "09a98bd249e94ae3a9d35fdd57dbb0db",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "no",
+							"value": "1133",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "取消訂票",
+			"request": {
+				"url": "{{HOST}}WebApi/User/order",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "account",
+							"value": "mikey",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "token",
+							"value": "6fb28a51c0364953996ef87000ab0b36",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

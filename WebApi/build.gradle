@@ -1,0 +1,124 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'org.akhikhl.gretty'
+//apply plugin: 'com.google.cloud.tools.appengine'
+//apply plugin: 'jetty'
+
+//group = 'com.lavidatec.uniplateform'   // Generated output GroupId
+version = '0.0.2'          // Version in generated output
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+
+// Copyright 2016 Google Inc. All Rights Reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//        http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+// [START gradle]
+buildscript {      // Configuration for building
+    repositories {
+        jcenter()      // Bintray's repository - a fast Maven Central mirror & more
+        mavenCentral()
+    }
+    dependencies {
+        //classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
+        classpath 'org.akhikhl.gretty:gretty:+'
+    }
+}
+
+repositories {   // repositories for JARs you access in your code
+    maven {
+        url 'https://maven-central.storage.googleapis.com'             // Google's mirror of Maven Central
+    }
+
+    //maven {
+    //  url 'https://oss.sonatype.org/content/repositories/snapshots' // SNAPSHOT repository if needed
+    //}
+
+    jcenter()
+    mavenCentral()
+  
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+
+    compile name: 'lavida/ApiService-0.0.2'
+
+    //    compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
+    //    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+    compile group: 'javax.servlet.jsp.jstl', name: 'jstl', version: '1.2'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+    compile group: 'org.apache.tiles', name: 'tiles-api', version: '3.0.7'
+    compile group: 'org.apache.tiles', name: 'tiles-jsp', version: '3.0.7'
+    compile group: 'org.apache.tiles', name: 'tiles-servlet', version: '3.0.7'
+    compile group: 'org.apache.tiles', name: 'tiles-template', version: '3.0.7'
+    compile group: 'org.apache.tiles', name: 'tiles-el', version: '3.0.7'
+    compile group: 'org.apache.tiles', name: 'tiles-request-jsp', version: '1.0.6'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
+    compile group: 'org.springframework', name: 'spring-core', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-web', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.1.0.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: '4.1.2.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.1.2.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.1.2.RELEASE'
+
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
+    compile group: 'com.mchange', name: 'c3p0', version: '0.9.5.2'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.41'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.16'
+    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.1.1'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
+    compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.8.Final'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.8.Final'
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.0.Final'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-tx', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.7.RELEASE'
+    
+    compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.56'
+    
+    // https://mvnrepository.com/artifact/org.apache.directory.studio/org.apache.commons.io
+    compile group: 'org.apache.directory.studio', name: 'org.apache.commons.io', version: '2.4'
+
+    
+    testCompile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+}
+
+// [START gretty]
+gretty {
+    httpPort = 8080
+    contextPath = '/WebApi'
+    servletContainer = 'jetty9'  // What App Engine Flexible uses
+}
+// [END gretty]
+
+// [START model]
+//appengine {
+//
+//    deploy {   // deploy configuration
+//        stopPreviousVersion = true  // default - stop the current version
+//        promote = true              // default - & make this the current version
+//    }
+//
+//}
+// [END model]
+// [END gradle]

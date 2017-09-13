@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence"
+xmlns:xsi="http://www.23.org/2001/XMLSchema-instance">-->
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+             http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="unitdbconn">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.lavidatec.template.entity.UsersModel</class>
+        <class>com.lavidatec.template.entity.TrainsModel</class>
+        <properties>
+<!--            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://192.168.1.205:3306/unitdb"/>
+            <property name="javax.persistence.jdbc.user" value="dba"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.password" value="LaVidaDba-2017!"/>-->
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/unitdb"/>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.password" value="2gjixdjl3155!"/>
+            
+            
+            <!--生成數據庫表結構-->
+            <!--<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>-->
+            <!--創建Entity Manager時搜索文件的類型，多個值之間用逗號分隔-->
+            <property name="hibernate.archive.autodetection" value="class,hbm"/>
+            <!--指定不同的數據庫，Hibernate底層會根據不同的數據庫生成的SQL進行優化-->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <!--是否輸出SQL語句-->
+            <property name="hibernate.show_sql" value="true"/>
+            <!--生成數據庫表結構-->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!--指定Transaction的工廠類別-->
+            <property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JDBCTransactionFactory"/>
+            <!--C3P0 屬性設定您的實作類別名稱-->
+            <property name="hibernate.connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider"/>
+            <!--數據庫連接池的最大連接數-->
+            <property name="hibernate.c3p0.max_size" value="100"/>
+            <!--數據庫連接池的最小連接數-->
+            <property name="hibernate.c3p0.min_size" value="5"/>
+            <!--當數據庫連接池中的連接耗盡時，同一時刻獲取多少個新的數據連接-->
+            <property name="hibernate.c3p0.acquire_increment" value="5"/>
+            <!--表示連接池檢測線程多長時間檢測一次線程池內的所有連接對像是否超時-->
+            <!--比較連接對象最後一次被使用時間和當前時間的時間差來和timeout做對比，決定是否銷毀這個連接對象-->
+            <property name="hibernate.c3p0.idle_test_period" value="50"/>
+            <!--配置一個表名，連接池根據這個表名用自己的測試sql語句在這個空表上測試數據庫連接,這個表只能由c3p0來使用-->
+            <property name="hibernate.c3p0.automaticTestTable" value="C3p0_Test"/>
+            <!--如果設為true那麼在取得連接的同時將校驗連接的有效性。 Default: false -->
+            <property name="testConnectionOnCheckin" value="true"/>
+            <property name="testConnectionOnCheckout" value="false"/>
+            <!-- 每次都驗證連接是否可用 -->
+            <property name="hibernate.c3p0.validate" value="true"/>
+            <!--連接池為數據源緩存的PreparedStatement的總數-->
+            <property name="hibernate.c3p0.max_statements" value="50"/>
+            <!--連接的超時時間,如果超過這個時間,會拋出異常，單位秒-->
+            <property name="hibernate.c3p0.timeout" value="3600"/>
+            <!--最大空閒時間,60秒內未使用則連接被丟棄。若為0則永不丟棄-->
+            <property name="hibernate.c3p0.maxIdleTime" value="0"/>
+            <!--連接池用完時客戶端調用getConnection()後等待獲取新連接的時間，超時後將拋出 SQLException,如設為0則無限期等待。單位毫秒-->
+            <property name="hibernate.c3p0.checkoutTimeout" value="3600"/>
+            <!--當連接池裡面的連接用完的時候，C3P0一下獲取的新的連接數-->
+            <property name="hibernate.c3p0.acquire_increment" value="1"/>
+            <!--定義在從數據庫獲取新連接失敗後重複嘗試的次數。 Default: 30-->
+            <property name="hibernate.c3p0.acquireRetryAttempts" value="10"/>
+            <!--兩次連接中間隔時間，單位毫秒。 Default: 1000-->
+            <property name="hibernate.c3p0.acquireRetryDelay" value="500"/>
+            <property name="hibernate.c3p0.privilegeSpawnedThreads" value="true"/>
+            <property name="hibernate.c3p0.contextClassLoaderSource" value="library"/>
+        </properties>
+    </persistence-unit>
+</persistence>

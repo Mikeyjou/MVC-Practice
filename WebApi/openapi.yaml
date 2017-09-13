@@ -1,0 +1,167 @@
+# [START swagger]
+swagger: "2.0"
+info:
+  description: "Uni Plate Form Google Cloud Endpoints API"
+  title: "UPFEndpoints"
+  version: "0.1.1"
+host: "echo-api.endpoints.mimitalk-1641.cloud.goog"
+# [END swagger]
+basePath: "/"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+schemes:
+- "https"
+paths:
+  "/Fitbit/Token":
+    get:
+      description: "redirect to fitbit access page"
+      operationId: "Token"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Token"
+          schema:
+            $ref: "#/definitions/Token"
+  "/Fitbit/GetAccessUserID":
+    get:
+      description: "Returns GetAccessUserID"
+      operationId: "GetAccessUserID"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication GetAccessUserID"
+          schema:
+            $ref: "#/definitions/GetAccessUserID"
+  "/Fitbit/GetRefresh_Access_Token":
+    get:
+      description: "GetRefresh_Access_Token"
+      operationId: "GetRefresh_Access_Token"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication GetRefresh_Access_Token"
+          schema:
+            $ref: "#/definitions/GetRefresh_Access_Token"
+  "/Fitbit/Get_Access_Token":
+    get:
+      description: "Get_Access_Token"
+      operationId: "Get_Access_Token"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication Get_Access_Token"
+          schema:
+            $ref: "#/definitions/Get_Access_Token"
+  "/Fitbit/GetActivities":
+    get:
+      description: "GetActivities"
+      operationId: "GetActivities"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication GetActivities"
+          schema:
+            $ref: "#/definitions/GetActivities"
+  "/Fitbit/GetActivitiesDetail":
+    get:
+      description: "GetActivitiesDetail"
+      operationId: "GetActivitiesDetail"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication GetActivitiesDetail"
+          schema:
+            $ref: "#/definitions/GetActivitiesDetail"
+  "/Fitbit/GetDevices":
+    get:
+      description: "GetDevices"
+      operationId: "GetDevices"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication GetDevices"
+          schema:
+            $ref: "#/definitions/GetDevices"
+  "/Fitbit/GetHeartRate":
+    get:
+      description: "GetHeartRate"
+      operationId: "GetHeartRate"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication GetHeartRate"
+          schema:
+            $ref: "#/definitions/GetHeartRate"
+  "/Fitbit/GetProfile":
+    get:
+      description: "GetProfile"
+      operationId: "GetProfile"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication GetProfile"
+          schema:
+            $ref: "#/definitions/GetProfile"
+  "/Fitbit/GetSleep":
+    get:
+      description: "GetSleep"
+      operationId: "GetSleep"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication GetSleep"
+          schema:
+            $ref: "#/definitions/GetSleep"
+
+definitions:
+  echoMessage:
+    properties:
+      message:
+        type: "string"
+  authInfoResponse:
+    properties:
+      id:
+        type: "string"
+      email:
+        type: "string"
+# This section requires all requests to any path to require an API key.
+security:
+- api_key: []
+securityDefinitions:
+  # This section configures basic authentication with an API key.
+  api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"
+  # This section configures authentication using Google API Service Accounts
+  # to sign a json web token. This is mostly used for server-to-server
+  # communication.
+  google_jwt:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    # This must match the 'iss' field in the JWT.
+    x-google-issuer: "jwt-client.endpoints.sample.google.com"
+    # Update this with your service account's email address.
+    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/YOUR-SERVICE-ACCOUNT-EMAIL"
+  # This section configures authentication using Google OAuth2 ID Tokens.
+  # ID Tokens can be obtained using OAuth2 clients, and can be used to access
+  # your API on behalf of a particular user.
+  google_id_token:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    x-google-issuer: "accounts.google.com"
+    x-google-jwks_uri: "https://www.googleapis.com/oauth2/v1/certs"
