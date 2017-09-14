@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -46,4 +47,7 @@ public class TrainsModel implements Serializable{
     private int ticketsLimit;
     @Column(name = "UpdateTime")
     private LocalDateTime updateTime;
+    @Version
+    @Column(name="OptimisticLock")
+    private int optimisticLock;
 }

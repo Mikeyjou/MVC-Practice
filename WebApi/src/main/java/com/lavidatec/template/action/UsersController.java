@@ -6,6 +6,7 @@
 package com.lavidatec.template.action;
 
 
+import com.google.gson.JsonObject;
 import com.lavidatec.template.entity.TrainsModel;
 import com.lavidatec.template.entity.UsersModel;
 import com.lavidatec.template.pojo.PasswordHash;
@@ -26,20 +27,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 @Controller
 @RequestMapping("/User")
 public class UsersController {
     
+    /**
+     * log init.
+     */
+    static final Logger LOGGER
+            = LoggerFactory.getLogger(UsersController.class);
+    
     private IUserService userService = new UserServiceImpl();
     private ITrainService trainService = new TrainServiceImpl();
-    
-    private ApiError apiError = new ApiError();
     
     //取得HttpServletRequest的參數
     private Map<String,String> getParam(HttpServletRequest request) 
@@ -59,7 +69,7 @@ public class UsersController {
     //使用者註冊
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public String addUser(@RequestParam("account") String account, 
+    public ResponseEntity<Object> addUser(@RequestParam("account") String account, 
                           @RequestParam("password") String pwd)
             throws Exception{
         if(StringUtils.isNotBlank(account) && StringUtils.isNotBlank(pwd)){
@@ -67,21 +77,21 @@ public class UsersController {
             userModel.setAccount(account);
             userModel.setPassword(pwd);
             //確認使用者不存在
-            if(!userService.userFind(Optional.of(userModel)).isPresent())
+            if(!userService.userFind(Optional.of(userModel)).isPresent()){
                 userService.userPersist(Optional.of(userModel));
-            else{
-                throw apiError.new UserDuplicateException();
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"Success",null), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"This username is duplicate",null), HttpStatus.BAD_REQUEST);
             }
         }else{
-            throw apiError.new MissParametersException();
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"Miss some parameters",null), HttpStatus.BAD_REQUEST);
         }
-        return "";
     }
     
     //使用者帳號刪除
     @RequestMapping(value = "", method = RequestMethod.DELETE)
     @ResponseBody
-    public String deleteUser(HttpServletRequest request)
+    public ResponseEntity<Object> deleteUser(HttpServletRequest request)
             throws Exception{
         try{
             Map<String,String> paramMap = getParam(request);
@@ -94,21 +104,23 @@ public class UsersController {
                 userModel.setPassword(pwd);
                 //確認使用者存在
                 if(userService.userFind(Optional.of(userModel)).isPresent()){
-                    userService.userRemove(Optional.of(userModel));    
+                    userService.userRemove(Optional.of(userModel));
+                    return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"Success",null), HttpStatus.OK);
                 }else{
-                   throw apiError.new UserNotFoundException();
+                    return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,"Username or password is wrong",null), HttpStatus.NOT_FOUND);
                 }
+            }else{
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"Miss some parameters",null), HttpStatus.BAD_REQUEST);    
             }
-            return "";  
         }catch(ArrayIndexOutOfBoundsException e){
-            throw apiError.new MissParametersException();
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"Miss some parameters",null), HttpStatus.BAD_REQUEST);
         }
     }
     
     //使用者登入
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public String loginUser(@RequestParam("account") String account, 
+    public ResponseEntity<Object> loginUser(@RequestParam("account") String account, 
                            @RequestParam("password") String pwd)
             throws Exception{
         if(StringUtils.isNotBlank(account) && StringUtils.isNotBlank(pwd)){
@@ -116,20 +128,23 @@ public class UsersController {
             userModel.setAccount(account);
             userModel.setPassword(pwd);
             //確認使用者存在
-            if(userService.userFind(Optional.of(userModel)).isPresent()){
-                return userService.userLogin(Optional.of(userModel));
+            Optional<UsersModel> user = userService.userFind(Optional.of(userModel));
+            if(user.isPresent()){
+                JSONObject result = new JSONObject();
+                result.put("Identifier", userService.userLogin(user));
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"Success",new JSONArray().put(result)), HttpStatus.OK);
             }else{
-                throw apiError.new UserNotFoundException();
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,"Username or password is wrong",null), HttpStatus.NOT_FOUND);
             }
         }else{
-            throw apiError.new MissParametersException();
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"Miss some parameters",null), HttpStatus.BAD_REQUEST);
         }
     }   
     
     //使用者登出
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody
-    public String logoutUser(@RequestParam("account") String account, 
+    public ResponseEntity<Object> logoutUser(@RequestParam("account") String account, 
                             @RequestParam("password") String pwd)
             throws Exception{
         if(StringUtils.isNotBlank(account) && StringUtils.isNotBlank(pwd)){
@@ -139,19 +154,19 @@ public class UsersController {
             //確認使用者存在
             if(userService.userFind(Optional.of(userModel)).isPresent()){
                 userService.userLogout(Optional.of(userModel));
-                return "";
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"Success",null), HttpStatus.OK);
             }else{
-                throw apiError.new UserNotFoundException();
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,"Username or password is wrong",null), HttpStatus.NOT_FOUND);
             }
         }else{
-            throw apiError.new MissParametersException();
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"Miss some parameters",null), HttpStatus.BAD_REQUEST);
         }
     }
     
     //訂票
     @RequestMapping(value = "/order", method = RequestMethod.POST)
     @ResponseBody
-    public String bookTicket(@RequestParam("account") String account, 
+    public ResponseEntity<Object> bookTicket(@RequestParam("account") String account, 
                             @RequestParam("password") String pwd,
                             @RequestParam("identifier") String identifier,
                             @RequestParam("no") String no)
@@ -162,34 +177,44 @@ public class UsersController {
             trainVo.setNo(no);
             Optional<TrainsModel> train = trainService.trainFind(trainVo);
             if(!train.isPresent()){
-                throw apiError.new TrainNotFoundException();
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,"Cant find this train",null), HttpStatus.NOT_FOUND);
             }else{
                 if(train.get().getTicketsLimit() <= 0)
-                    throw apiError.new TrainTicketSoldOutException();
+                    return new ResponseEntity<>(new ApiResponse(HttpStatus.NO_CONTENT,"No tickets anymore",null), HttpStatus.NO_CONTENT);
             }
             UsersModel userModel = new UsersModel();
             userModel.setAccount(account);
             userModel.setPassword(pwd);
             //確認使用者存在
-            if(!userService.userFind(Optional.of(userModel)).isPresent()){
-                throw apiError.new UserNotFoundException();
+            Optional<UsersModel> user = userService.userFind(Optional.of(userModel));
+            if(!user.isPresent()){
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,"Username or password is wrong",null), HttpStatus.NOT_FOUND);
             }
             //確認使用者辨識碼正確
             userModel.setIdentifier(identifier);
-            if(!userService.userFind(Optional.of(userModel)).isPresent()){
-                throw apiError.new UserIdentifierNotFoundException();
+            user = userService.userFind(Optional.of(userModel));
+            if(!user.isPresent()){
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"This identifier is wrong",null), HttpStatus.BAD_REQUEST);
             }
-            
-            return  userService.userBook(Optional.of(userModel), no);
+            //確認Optimistic Lock
+            System.out.println("User controller OptLock" + user.get().getOptimisticLock());
+            String orderToken = userService.userBook(user, no);
+            if(orderToken != ""){
+                JSONObject result = new JSONObject();
+                result.put("Order token", orderToken);
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"Success",new JSONArray().put(result)), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"Book failed",null), HttpStatus.BAD_REQUEST);
+            }
         }else{
-            throw apiError.new MissParametersException();
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"Miss some parameters",null), HttpStatus.BAD_REQUEST);
         }
     }
     
     //取消訂單
     @RequestMapping(value = "/order", method = RequestMethod.DELETE)
     @ResponseBody
-    public String cancelOrder(HttpServletRequest request)
+    public ResponseEntity<Object> cancelOrder(HttpServletRequest request)
             throws Exception{
         try{
             Map<String,String> paramMap = getParam(request);
@@ -204,16 +229,16 @@ public class UsersController {
                 //確認使用者存在
                 Optional<UsersModel> user = userService.userFind(Optional.of(userModel));
                 if(!user.isPresent()){
-                    throw apiError.new UserNotFoundException();
+                    return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,"Username or password is wrong",null), HttpStatus.NOT_FOUND);
                 }
                 if(!user.get().getOrderList().contains(token)){
-                    throw apiError.new UserOrderTokenNotFoundException();
+                    return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"This order token is wrong",null), HttpStatus.BAD_REQUEST);
                 }
                 userService.userCancelOrder(Optional.of(userModel), token);
             }
-            return "";
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"Success",null), HttpStatus.OK);
         }catch(ArrayIndexOutOfBoundsException e){
-            throw apiError.new MissParametersException();
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,"Miss some parameters",null), HttpStatus.BAD_REQUEST);
         }
     }
 }

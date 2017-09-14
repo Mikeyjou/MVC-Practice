@@ -52,7 +52,6 @@ public class TrainServiceImpl implements ITrainService{
     public final Optional<TrainsModel> trainFind(final TrainsVo trainsVo)
             throws Exception {
         LOGGER.info("trainFindStart");
-        ITrainsDao iTrainsDao = new TrainsDaoImpl();
         Optional<TrainsModel> result = iTrainsDao.trainsFind(trainsVo);
         LOGGER.info("trainFindEnd");
         return result;

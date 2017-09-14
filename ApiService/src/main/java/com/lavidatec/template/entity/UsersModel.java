@@ -14,8 +14,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.OptimisticLocking;
 
 /**
  * .
@@ -24,6 +27,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Data
 @Entity
 @Table(name = "Unit_Users")
+@OptimisticLocking(type = OptimisticLockType.VERSION)
 public class UsersModel implements Serializable {
 
     /**
@@ -50,4 +54,7 @@ public class UsersModel implements Serializable {
     private String identifier;
     @Column(name = "UpdateTime")
     private LocalDateTime updateTime;
+    @Version
+    @Column(name="OptimisticLock")
+    private int optimisticLock;
 }

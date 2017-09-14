@@ -18,4 +18,5 @@ public class UsersVo {
     private String Password = null;
     private String Identifier = null;
     private String OrderToken = null;
+    private Integer optimisticLock = null;
 }

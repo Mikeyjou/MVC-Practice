@@ -216,6 +216,13 @@ public class TrainsDaoImpl implements ITrainsDao{
                 criList.add("date = :date");
                 paramMap.put("date", trainsVo.getDate());
             }
+            if(trainsVo.getOptimisticLock() != null){
+                if(trainsVo.getOptimisticLock() > 0){
+                    System.out.println("Train OptLock" + trainsVo.getOptimisticLock());
+                    criList.add("optimisticLock = :optimisticLock");
+                    paramMap.put("optimisticLock", trainsVo.getOptimisticLock());
+                }
+            }
 
             if (!criList.isEmpty()) {
                 // 使用者輸入查詢條件

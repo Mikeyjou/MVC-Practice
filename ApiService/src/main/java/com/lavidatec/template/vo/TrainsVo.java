@@ -12,4 +12,5 @@ public class TrainsVo {
     private String No = null;
     private String Type = null;
     private String Date = null;
+    private Integer optimisticLock = null;
 }

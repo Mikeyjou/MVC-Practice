@@ -77,6 +77,11 @@ public class UserServiceImpl implements IUserService{
             usersVo.setPassword(sha.createHash(users.get().getPassword()));
         if(StringUtils.isNotBlank(users.get().getIdentifier()))
             usersVo.setIdentifier(users.get().getIdentifier());
+        
+        if(users.get().getOptimisticLock() > 0){
+            System.out.println("User Service optLock" + users.get().getOptimisticLock());
+            usersVo.setOptimisticLock(users.get().getOptimisticLock());
+        }
         Optional<UsersModel> result = iUsersDao.usersFind(usersVo);
         LOGGER.info("userFindEnd");
         return result;
@@ -101,17 +106,13 @@ public class UserServiceImpl implements IUserService{
     @Override
     public final String userLogin(final Optional<UsersModel> users)
             throws Exception {
-        UsersVo usersVo = new UsersVo();
         String token = "";
-        usersVo.setAccount(users.get().getAccount());
-        usersVo.setPassword(sha.createHash(users.get().getPassword()));
-        Optional<UsersModel> user = iUsersDao.usersFind(usersVo);
         //判斷是否資料正確
-        if(user.isPresent()){
+        if(users.isPresent()){
             token = UUID.randomUUID().toString().replace("-", "");
-            user.get().setIdentifier(token);
+            users.get().setIdentifier(token);
         }
-        iUsersDao.usersMerge(user);
+        iUsersDao.usersMerge(users);
         return token;
     }
     
@@ -134,24 +135,28 @@ public class UserServiceImpl implements IUserService{
     public final String userBook(final Optional<UsersModel> users,String no)
             throws Exception {
         String token = "";
-        UsersVo usersVo = new UsersVo();
-        PasswordSHA3 sha = new PasswordSHA3();
-        usersVo.setAccount(users.get().getAccount());
-        usersVo.setPassword(sha.createHash(users.get().getPassword()));
-        usersVo.setIdentifier(users.get().getIdentifier());
-        //尋找該識別碼以及帳號密碼之使用者
-        Optional<UsersModel> user = iUsersDao.usersFind(usersVo);
+//        UsersVo usersVo = new UsersVo();
+//        PasswordSHA3 sha = new PasswordSHA3();
+//        usersVo.setAccount(users.get().getAccount());
+//        usersVo.setPassword(sha.createHash(users.get().getPassword()));
+//        usersVo.setIdentifier(users.get().getIdentifier());
+//        usersVo.setOptimisticLock(users.get().getOptimisticLock());
+//        //尋找該識別碼以及帳號密碼之使用者
+//        Optional<UsersModel> user = iUsersDao.usersFind(usersVo);
         
         TrainsVo trainsVo = new TrainsVo();
         trainsVo.setNo(no);
         ITrainsDao iTrainsDao = new TrainsDaoImpl();
         //尋找該車
         Optional<TrainsModel> train = iTrainsDao.trainsFind(trainsVo);
-
+        //樂觀鎖 在根據version尋找一次
+        trainsVo.setOptimisticLock(train.get().getOptimisticLock());
+        train = iTrainsDao.trainsFind(trainsVo);
+        
         //計算該天訂票票數
         int dayCount = 1;
-        if(user.isPresent() && train.isPresent()){
-            String orderList = user.get().getOrderList();
+        if(users.isPresent() && train.isPresent()){
+            String orderList = users.get().getOrderList();
             //確保清單非空值
             if(StringUtils.isNotBlank(orderList)){
                 String[] eachOrder = orderList.split(",");
@@ -170,15 +175,17 @@ public class UserServiceImpl implements IUserService{
                 train.get().setTicketsLimit(train.get().getTicketsLimit() - 1);
 
                 String order = train.get().getDate() + "_" + train.get().getNo() + "_" + token;
-                if(StringUtils.isNotBlank(user.get().getOrderList()))
-                    user.get().setOrderList(user.get().getOrderList() + "," + order);   
+                if(StringUtils.isNotBlank(users.get().getOrderList()))
+                    users.get().setOrderList(users.get().getOrderList() + "," + order);   
                 else
-                    user.get().setOrderList(order);
+                    users.get().setOrderList(order);
             }
 
             if(train.get().getTicketsLimit() >= 0){
-                iUsersDao.usersMerge(user);
-                iTrainsDao.trainsMerge(train);
+                if(iTrainsDao.trainsMerge(train) == 1)
+                    iUsersDao.usersMerge(users);
+                else
+                    token = "";
             }else{
                 token = "";
             }

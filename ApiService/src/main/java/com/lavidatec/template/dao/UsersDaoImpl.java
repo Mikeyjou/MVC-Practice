@@ -223,9 +223,16 @@ public class UsersDaoImpl implements IUsersDao {
                 paramMap.put("identifier", usersVo.getIdentifier());
             }
             if (StringUtils.isNotBlank(usersVo.getOrderToken())) {
-                LOGGER.info(usersVo.getOrderToken());
                 criList.add("orderList LIKE '%" + usersVo.getOrderToken() + "%'");
             }
+            if(usersVo.getOptimisticLock() != null){
+                if(usersVo.getOptimisticLock() > 0){
+//                    System.out.println("User optLock" + usersVo.getOptimisticLock());
+                    criList.add("optimisticLock = :optimisticLock");
+                    paramMap.put("optimisticLock", usersVo.getOptimisticLock());
+                }
+            }
+                
             if (!criList.isEmpty()) {
                 // 使用者輸入查詢條件
                 criList.forEach((cri) -> {

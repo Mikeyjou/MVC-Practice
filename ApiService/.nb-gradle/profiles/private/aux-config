@@ -5,15 +5,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
       <group>
-        <file>file:/N:/TestJobs/ApiService/src/main/resources/META-INF/persistence.xml</file>
-        <file>file:/N:/TestJobs/ApiService/src/main/java/com/lavidatec/template/service/UserServiceImpl.java</file>
-        <file>file:/N:/TestJobs/ApiService/src/main/java/com/lavidatec/template/entity/UsersModel.java</file>
+        <file>file:/N:/MVC-Practice/ApiService/src/main/java/com/lavidatec/template/dao/UsersDaoImpl.java</file>
+        <file>file:/N:/MVC-Practice/ApiService/src/main/java/com/lavidatec/template/dao/TrainsDaoImpl.java</file>
+        <file>file:/N:/MVC-Practice/ApiService/src/main/java/com/lavidatec/template/service/UserServiceImpl.java</file>
       </group>
     </open-files>
-    <editor-bookmarks lastBookmarkId="0" xmlns="http://www.netbeans.org/ns/editor-bookmarks/2"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
       <group>
-        <file>file:/N:/TestJobs/ApiService/src/main/java/com/lavidatec/template/comment/JPAUtil.java</file>
+        <file>file:/N:/MVC-Practice/ApiService/src/main/java/com/lavidatec/template/dao/UsersDaoImpl.java</file>
+        <file>file:/N:/MVC-Practice/ApiService/src/main/java/com/lavidatec/template/dao/TrainsDaoImpl.java</file>
+        <file>file:/N:/MVC-Practice/ApiService/src/main/java/com/lavidatec/template/service/UserServiceImpl.java</file>
       </group>
     </open-files>
   </auxiliary>
